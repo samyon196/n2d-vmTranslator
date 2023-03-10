@@ -3,14 +3,14 @@ import { CInstruction } from "./CInstruction";
 
 describe("C Instruction", () => {
   describe("print()", () => {
-    test("prints number with @ prefix", () => {
-      const cInst = new CInstruction(3);
-      expect(cInst.print()).toEqual("@3");
+    test("M = D+A;JNE", () => {
+      const cInst = new CInstruction('M', 'D+A', 'JNE');
+      expect(cInst.print()).toEqual("M = D+A;JNE");
     });
 
-    test("supports numbers with multiple digits", () => {
-      const cInst = new CInstruction(259);
-      expect(cInst.print()).toEqual("@259");
+    test("support for null destination", () => {
+      const cInst = new CInstruction('null', 'D+A', 'JNE');
+      expect(cInst.print()).toEqual("D+A;JNE");
     });
   });
 });
