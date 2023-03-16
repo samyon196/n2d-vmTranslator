@@ -7,12 +7,12 @@ type ASMBlock = Array<ASMInstruction>;
 
 describe("Pop Instruction Tests", () => {
   test("Correct object construction", () => {
-    const popInst = new PopInstruction("local");
+    const popInst = new PopInstruction("local", 2);
     expect(popInst).toBeDefined();
     expect(popInst.segment).toEqual("local");
   });
-  test("Correct pop local 2 compilation", () => {
-    const popInst = new PopInstruction("local");
+  test("should compile correctly the pop local 2", () => {
+    const popInst = new PopInstruction("local", 2);
     const asmListing: ASMBlock = [
       // CALCULATE TARGET LCL ADDR
       new AInstruction("LCL"),
