@@ -1,21 +1,28 @@
 import { VMInstruction } from "../VMInstruction";
-import { ASMInstruction } from '../Assembly/ASMInstruction'
+import { ASMInstruction } from "../Assembly/ASMInstruction";
 import { AInstruction } from "../Assembly/Addressing/AInstruction";
 import { CInstruction } from "../Assembly/Computation/CInstruction";
 type ASMBlock = Array<ASMInstruction>;
 export class PopInstruction implements VMInstruction {
   segment: string;
   offset: number;
+  private sections: Map<string, string>;
   constructor(segment: string, offset: number) {
+    this.sections = new Map([
+      ["local", "LCL"],
+      ["argument", "ARG"],
+      ["this", "THIS"],
+      ["that", "THAT"],
+    ]);
     this.segment = segment;
     this.offset = offset;
   }
   compile(): ASMBlock {
     const x: ASMBlock = [
       // CALCULATE TARGET LCL ADDR
-      new AInstruction("LCL"),
+      new AInstruction(this.sections.get(this.segment) + ""),
       new CInstruction("D", "M", "null"),
-      new AInstruction("2"),
+      new AInstruction(this.offset.toString()),
       new CInstruction("D", "A+D", "null"),
       // STORE TARGET ADDR AT R13
       new AInstruction("13"),
