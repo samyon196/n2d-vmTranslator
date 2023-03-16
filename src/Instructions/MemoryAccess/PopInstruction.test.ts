@@ -14,20 +14,23 @@ describe("Pop Instruction Tests", () => {
   test("Correct pop local 2 compilation", () => {
     const popInst = new PopInstruction("local");
     const asmListing: ASMBlock = [
-      new AInstruction(0), // Set memory to point at M[0], where SP is located
-      new CInstruction("AM", "M-1", "null"), // Point at stack top and SP--
-      // R13 = M
-      new AInstruction(13)
-      new AInstruction(2),
-      new CInstruction("D", "A", "null"),
-      new AInstruction(1),
+      // CALCULATE TARGET LCL ADDR
+      new AInstruction("LCL"),
+      new CInstruction("D", "M", "null"),
+      new AInstruction("2"),
+      new CInstruction("D", "A+D", "null"),
+      // STORE TARGET ADDR AT R13
+      new AInstruction("13"),
+      new CInstruction("M", "D", "null"),
+      // GET ELEMENT FROM STACK
+      new AInstruction("SP"),
+      new CInstruction("AM", "M-1", "null"),
+      new CInstruction("D", "M", "null"),
+      // WRITE TO ADDR STORED AT R13
+      new AInstruction("13"),
       new CInstruction("A", "M", "null"),
-      new CInstruction("A", "A+D", "null"),
-      // M = tmp
+      new CInstruction("M", "D", "null"),
     ];
-    asmListing.push(new CInstruction("M", "M+1", "null"));
-    asmListing.push(new AInstruction(33));
-    asmListing.push(new AInstruction(33));
     expect(popInst.compile()).toEqual(asmListing);
   });
 });
